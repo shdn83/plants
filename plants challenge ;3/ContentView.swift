@@ -1,58 +1,26 @@
 import SwiftUI
-import Playgrounds
 
 struct ContentView: View {
+    @EnvironmentObject var viewModel: PlantsViewModel
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        if viewModel.hasSeenOnboarding {
+            Text("My Plants")
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.black.ignoresSafeArea())
+        } else {
+            OnboardingView(onStart: viewModel.completeOnboarding)
+        }
     }
 }
 
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+            .environmentObject(PlantsViewModel())
+    }
+}
 #Preview {
     ContentView()
-}
-
-#Playground {
-    _ = 1 + 2
 }
