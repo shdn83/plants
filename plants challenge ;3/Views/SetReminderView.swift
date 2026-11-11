@@ -4,11 +4,13 @@ struct SetReminderView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var viewModel: PlantsViewModel
 
-    @State private var name = ""
-    @State private var room = "Bedroom"
-    @State private var light = "Full sun"
-    @State private var wateringDays = "Every day"
-    @State private var waterAmount = "20-50 ml"
+    let plantToEdit: Plant?
+
+    @State private var name: String
+    @State private var room: String
+    @State private var light: String
+    @State private var wateringDays: String
+    @State private var waterAmount: String
 
     private let rooms = [
         "Bedroom", "Living Room", "Kitchen",
@@ -30,6 +32,15 @@ struct SetReminderView: View {
     ]
 
     private let fieldColor = Color(white: 0.17)
+
+    init(plantToEdit: Plant? = nil) {
+        self.plantToEdit = plantToEdit
+        _name = State(initialValue: plantToEdit?.name ?? "")
+        _room = State(initialValue: plantToEdit?.room ?? "Bedroom")
+        _light = State(initialValue: plantToEdit?.light ?? "Full sun")
+        _wateringDays = State(initialValue: plantToEdit?.wateringDays ?? "Every day")
+        _waterAmount = State(initialValue: plantToEdit?.waterAmount ?? "20-50 ml")
+    }
 
     private var isNameEmpty: Bool {
         name.trimmingCharacters(in: .whitespaces).isEmpty
@@ -124,6 +135,18 @@ struct SetReminderView: View {
                     }
                     .listRowBackground(fieldColor)
                 }
+
+                if plantToEdit != nil {
+                    Section {
+                        Button(role: .destructive) {
+                            delete()
+                        } label: {
+                            Text("Delete Reminder")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .listRowBackground(fieldColor)
+                    }
+                }
             }
             .pickerStyle(.menu)
             .tint(.gray)
@@ -138,21 +161,51 @@ struct SetReminderView: View {
 
     // Save Reminder
     private func save() {
-        viewModel.addPlant(
-            name: name.trimmingCharacters(in: .whitespaces),
-            room: room,
-            light: light,
-            wateringDays: wateringDays,
-            waterAmount: waterAmount
-        )
+        let cleanName = name.trimmingCharacters(in: .whitespaces)
 
+        if let plant = plantToEdit {
+            viewModel.updatePlant(
+                plant,
+                name: cleanName,
+                room: room,
+                light: light,
+                wateringDays: wateringDays,
+                waterAmount: waterAmount
+            )
+        } else {
+            viewModel.addPlant(
+                name: cleanName,
+                room: room,
+                light: light,
+                wateringDays: wateringDays,
+                waterAmount: waterAmount
+            )
+        }
+
+        dismiss()
+    }
+
+    // Delete Reminder
+    private func delete() {
+        if let plant = plantToEdit {
+            viewModel.deletePlant(plant)
+        }
         dismiss()
     }
 }
 
+// Preview
 struct SetReminderView_Previews: PreviewProvider {
     static var previews: some View {
-        SetReminderView()
-            .environmentObject(PlantsViewModel())
+        SetReminderView(
+            plantToEdit: Plant(
+                name: "Pothos",
+                room: "Bedroom",
+                light: "Full sun",
+                wateringDays: "Every day",
+                waterAmount: "20-50 ml"
+            )
+        )
+        .environmentObject(PlantsViewModel())
     }
 }

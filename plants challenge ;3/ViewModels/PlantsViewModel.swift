@@ -15,12 +15,28 @@ class PlantsViewModel: ObservableObject {
         hasSeenOnboarding = true
     }
 
+    // MARK: - Add / Edit / Delete
+
     func addPlant(name: String, room: String, light: String, wateringDays: String, waterAmount: String) {
         let plant = Plant(name: name, room: room, light: light, wateringDays: wateringDays, waterAmount: waterAmount)
         plants.append(plant)
     }
 
-    // من هنا لشاشة Today (نستخدمها في الدرس القادم)
+    func updatePlant(_ plant: Plant, name: String, room: String, light: String, wateringDays: String, waterAmount: String) {
+        if let index = plants.firstIndex(where: { $0.id == plant.id }) {
+            plants[index].name = name
+            plants[index].room = room
+            plants[index].light = light
+            plants[index].wateringDays = wateringDays
+            plants[index].waterAmount = waterAmount
+        }
+    }
+
+    func deletePlant(_ plant: Plant) {
+        plants.removeAll { $0.id == plant.id }
+    }
+
+    // MARK: - Today
 
     var hasNoPlants: Bool {
         plants.isEmpty
