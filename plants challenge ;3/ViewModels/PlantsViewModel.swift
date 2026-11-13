@@ -20,6 +20,10 @@ class PlantsViewModel: ObservableObject {
     func addPlant(name: String, room: String, light: String, wateringDays: String, waterAmount: String) {
         let plant = Plant(name: name, room: room, light: light, wateringDays: wateringDays, waterAmount: waterAmount)
         plants.append(plant)
+
+        NotificationManager.shared.requestPermission()
+        NotificationManager.shared.schedule(for: plant)
+        NotificationManager.shared.sendTest() // مؤقت: احذفه بعد الاختبار
     }
 
     func updatePlant(_ plant: Plant, name: String, room: String, light: String, wateringDays: String, waterAmount: String) {
@@ -29,11 +33,15 @@ class PlantsViewModel: ObservableObject {
             plants[index].light = light
             plants[index].wateringDays = wateringDays
             plants[index].waterAmount = waterAmount
+
+            NotificationManager.shared.cancel(for: plant)
+            NotificationManager.shared.schedule(for: plants[index])
         }
     }
 
     func deletePlant(_ plant: Plant) {
         plants.removeAll { $0.id == plant.id }
+        NotificationManager.shared.cancel(for: plant)
     }
 
     // MARK: - Today
