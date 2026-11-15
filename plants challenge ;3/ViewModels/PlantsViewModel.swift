@@ -3,7 +3,11 @@ import Combine
 
 class PlantsViewModel: ObservableObject {
 
-    @Published var plants: [Plant] = []
+    @Published var plants: [Plant] = [] {
+        didSet {
+            savePlants()
+        }
+    }
 
     @Published var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "hasSeenOnboarding") {
         didSet {
@@ -11,8 +15,30 @@ class PlantsViewModel: ObservableObject {
         }
     }
 
+    private let plantsKey = "savedPlants"
+
+    init() {
+        loadPlants()
+    }
+
     func completeOnboarding() {
         hasSeenOnboarding = true
+    }
+
+    // MARK: - Save / Load
+
+    private func savePlants() {
+        if let data = try? JSONEncoder().encode(plants) {
+            UserDefaults.standard.set(data, forKey: plantsKey)
+        }
+    }
+
+    private func loadPlants() {
+        guard let data = UserDefaults.standard.data(forKey: plantsKey),
+              let saved = try? JSONDecoder().decode([Plant].self, from: data) else {
+            return
+        }
+        plants = saved
     }
 
     // MARK: - Add / Edit / Delete
@@ -23,7 +49,6 @@ class PlantsViewModel: ObservableObject {
 
         NotificationManager.shared.requestPermission()
         NotificationManager.shared.schedule(for: plant)
-        NotificationManager.shared.sendTest() // مؤقت: احذفه بعد الاختبار
     }
 
     func updatePlant(_ plant: Plant, name: String, room: String, light: String, wateringDays: String, waterAmount: String) {

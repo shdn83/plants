@@ -159,7 +159,6 @@ struct SetReminderView: View {
         .preferredColorScheme(.dark)
     }
 
-    // Save Reminder
     private func save() {
         let cleanName = name.trimmingCharacters(in: .whitespaces)
 
@@ -185,7 +184,6 @@ struct SetReminderView: View {
         dismiss()
     }
 
-    // Delete Reminder
     private func delete() {
         if let plant = plantToEdit {
             viewModel.deletePlant(plant)
@@ -194,7 +192,6 @@ struct SetReminderView: View {
     }
 }
 
-// Preview
 struct SetReminderView_Previews: PreviewProvider {
     static var previews: some View {
         SetReminderView(
