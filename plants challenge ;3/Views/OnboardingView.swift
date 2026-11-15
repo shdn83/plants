@@ -17,7 +17,7 @@ struct OnboardingView: View {
 
             Spacer()
 
-            VStack(spacing: 16) {
+            VStack(spacing: 25) {
                 Image("PLANT;O")
                     .resizable()
                     .scaledToFit()

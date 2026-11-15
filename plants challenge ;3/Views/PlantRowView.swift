@@ -5,6 +5,8 @@ struct PlantRowView: View {
     let onToggle: () -> Void
 
     private let accent = Color(red: 0.20, green: 0.50, blue: 0.41)
+    private let sunColor = Color(red: 0.93, green: 0.86, blue: 0.52)
+    private let waterColor = Color(red: 0.78, green: 0.94, blue: 0.98)
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -16,18 +18,22 @@ struct PlantRowView: View {
             .buttonStyle(.plain)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("in \(plant.room)")
-                    .font(.caption2)
-                    .foregroundColor(.gray)
+                HStack(spacing: 4) {
+                    Image(systemName: "location")
+                    Text("in \(plant.room)")
+                }
+                .font(.caption2)
+                .foregroundColor(.gray)
 
                 Text(plant.name)
                     .font(.title3)
                     .foregroundColor(plant.isWatered ? .gray : .white)
 
                 HStack(spacing: 8) {
-                    badge(icon: "sun.max", text: plant.light)
-                    badge(icon: "drop", text: plant.waterAmount)
+                    badge(icon: "sun.max", text: plant.light, color: sunColor)
+                    badge(icon: "drop", text: plant.waterAmount, color: waterColor)
                 }
+                .opacity(plant.isWatered ? 0.5 : 1)
             }
 
             Spacer()
@@ -35,13 +41,13 @@ struct PlantRowView: View {
         .padding(.vertical, 6)
     }
 
-    private func badge(icon: String, text: String) -> some View {
+    private func badge(icon: String, text: String, color: Color) -> some View {
         HStack(spacing: 4) {
             Image(systemName: icon)
             Text(text)
         }
         .font(.caption2)
-        .foregroundColor(.gray)
+        .foregroundColor(color)
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
         .background(Color(white: 0.15))

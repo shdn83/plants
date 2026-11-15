@@ -1,4 +1,4 @@
-import SwiftUI
+ import SwiftUI
 
 struct MyPlantsView: View {
     @EnvironmentObject var viewModel: PlantsViewModel
@@ -56,12 +56,12 @@ struct MyPlantsView: View {
     }
 
     private var allDoneState: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 25) {
             Spacer()
-            Image(systemName: "leaf.fill")
+            Image("wink")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 100, height: 100)
+                .frame(width: 210, height: 210)
                 .foregroundColor(.green)
             Text("All Done! 🎉")
                 .font(.headline)
