@@ -143,6 +143,7 @@ struct SetReminderView: View {
                         } label: {
                             Text("Delete Reminder")
                                 .frame(maxWidth: .infinity)
+                                .foregroundColor(.red)
                         }
                         .listRowBackground(fieldColor)
                     }
