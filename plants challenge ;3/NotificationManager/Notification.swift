@@ -50,6 +50,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @un
         case "Every 2 days": return 2
         case "Every 3 days": return 3
         case "Once a week": return 7
+        case "Every 10 days": return 10
         case "Every 2 weeks": return 14
         default: return 1
         }

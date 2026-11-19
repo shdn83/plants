@@ -1,4 +1,5 @@
- import SwiftUI
+
+import SwiftUI
 
 struct MyPlantsView: View {
     @EnvironmentObject var viewModel: PlantsViewModel
@@ -62,7 +63,6 @@ struct MyPlantsView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 210, height: 210)
-                .foregroundColor(.green)
             Text("All Done! 🎉")
                 .font(.headline)
             Text("All Reminders Completed")
@@ -75,36 +75,49 @@ struct MyPlantsView: View {
 
     private var plantsList: some View {
         VStack(spacing: 12) {
-            VStack(spacing: 8) {
-                Text(viewModel.progressMessage)
-                    .font(.footnote)
+            progressHeader
+            rowsList
+        }
+    }
 
-                ProgressView(value: viewModel.progress)
-                    .tint(accent)
-                    .animation(.easeInOut, value: viewModel.progress)
-            }
-            .padding(.horizontal, 24)
-            .padding(.top, 16)
+    private var progressHeader: some View {
+        VStack(spacing: 8) {
+            Text(viewModel.progressMessage)
+                .font(.footnote)
 
-            List(viewModel.plants) { plant in
-                PlantRowView(plant: plant, onToggle: {
-                    viewModel.toggleWatered(plant)
-                })
-                .listRowBackground(Color.black)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    onEdit(plant)
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                    Button(role: .destructive) {
-                        viewModel.deletePlant(plant)
-                    } label: {
-                        Image(systemName: "trash")
-                    }
-                }
+            ProgressView(value: viewModel.progress)
+                .tint(accent)
+                .animation(.easeInOut, value: viewModel.progress)
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 16)
+    }
+
+    private var rowsList: some View {
+        List(viewModel.sortedPlants) { plant in
+            row(for: plant)
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+    }
+
+    private func row(for plant: Plant) -> some View {
+        PlantRowView(plant: plant, onToggle: {
+            withAnimation {
+                viewModel.toggleWatered(plant)
             }
-            .listStyle(.plain)
-            .scrollContentBackground(.hidden)
+        })
+        .listRowBackground(Color.black)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onEdit(plant)
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button(role: .destructive) {
+                viewModel.deletePlant(plant)
+            } label: {
+                Image(systemName: "trash")
+            }
         }
     }
 

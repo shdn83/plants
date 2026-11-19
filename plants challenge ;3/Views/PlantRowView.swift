@@ -27,14 +27,14 @@ struct PlantRowView: View {
 
                 Text(plant.name)
                     .font(.title3)
-                    .foregroundColor(plant.isWatered ? .gray : .white)
+                    .foregroundColor(.white)
 
                 HStack(spacing: 8) {
                     badge(icon: "sun.max", text: plant.light, color: sunColor)
                     badge(icon: "drop", text: plant.waterAmount, color: waterColor)
                 }
-                .opacity(plant.isWatered ? 0.5 : 1)
             }
+            .opacity(plant.isWatered ? 0.4 : 1)
 
             Spacer()
         }
@@ -57,10 +57,16 @@ struct PlantRowView: View {
 
 struct PlantRowView_Previews: PreviewProvider {
     static var previews: some View {
-        PlantRowView(
-            plant: Plant(name: "Monstera", room: "Kitchen", light: "Full sun", wateringDays: "Every day", waterAmount: "20-50 ml"),
-            onToggle: {}
-        )
+        VStack {
+            PlantRowView(
+                plant: Plant(name: "Monstera", room: "Kitchen", light: "Full sun", wateringDays: "Every day", waterAmount: "20-50 ml"),
+                onToggle: {}
+            )
+            PlantRowView(
+                plant: Plant(name: "Pothos", room: "Bedroom", light: "Full sun", wateringDays: "Every day", waterAmount: "20-50 ml", isWatered: true),
+                onToggle: {}
+            )
+        }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.black)

@@ -1,3 +1,4 @@
+
 import SwiftUI
 import Combine
 
@@ -73,6 +74,10 @@ class PlantsViewModel: ObservableObject {
 
     var hasNoPlants: Bool {
         plants.isEmpty
+    }
+
+    var sortedPlants: [Plant] {
+        plants.filter { !$0.isWatered } + plants.filter { $0.isWatered }
     }
 
     func toggleWatered(_ plant: Plant) {
